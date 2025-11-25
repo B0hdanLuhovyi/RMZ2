@@ -16,7 +16,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            BohdanTheme {//0000
+            BohdanTheme {
                 AccountingApp(viewModel)
             }
         }

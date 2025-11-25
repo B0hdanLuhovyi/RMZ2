@@ -1,22 +1,31 @@
 package com.example.bohdan
+
+import android.app.Application
 import androidx.compose.runtime.*
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel // Импорт изменился
 import java.util.*
 
-class MainViewModel : ViewModel() {
 
-    private val accountingService = AccountingService()
-    // Використовуємо mutableStateListOf для автоматичного оновлення UI при зміні списку
+class MainViewModel(application: Application) : AndroidViewModel(application) {
+
+
+    private val accountingService = AccountingService(application.applicationContext)
+
     private val _documents = mutableStateListOf<Document>()
     val documents: List<Document> get() = _documents
+
     var totalAmount by mutableStateOf(0.0)
         private set
 
     init {
-        // Створюємо кілька прикладів документів при ініціалізації
-        accountingService.createInvoice("Company A", "Client X", 1500.0, Date(System.currentTimeMillis() + 86400000 * 7))
-        accountingService.createReceipt("Client Z", "Company A", 500.0, "Cash")
-        accountingService.createWaybill("Warehouse 1", "Store 3", listOf("Goods Y"), 200.0)
+
+
+        if (accountingService.listAllDocuments().isEmpty()) {
+            accountingService.createInvoice("Company A", "Client X", 1500.0, Date(System.currentTimeMillis() + 86400000 * 7))
+            accountingService.createReceipt("Client Z", "Company A", 500.0, "Cash")
+            accountingService.createWaybill("Warehouse 1", "Store 3", listOf("Goods Y"), 200.0)
+        }
+
         refreshDocuments()
     }
 
